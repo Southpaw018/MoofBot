@@ -5,7 +5,7 @@ const bot = new Discord.Client();
 const token = JSON.parse(fs.readFileSync('token.json', 'utf8')).token;
 
 bot.on('ready', () => {
-    console.log(`MoofBot ready. Logged in as ${client.user.username}#${client.user.discriminator}`);
+    console.log(`MoofBot ready. Logged in as ${bot.user.username}#${bot.user.discriminator}`);
 });
 
 bot.on('message', msg => {
