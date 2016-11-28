@@ -1,16 +1,17 @@
 {
-  "name": "MoofBot",
-  "version": "0.0.1",
-  "description": "Discord bot for ButtMumble",
-  "main": "moofbot.js",
-  "dependencies": {
-    "discord.js": "^10.0.1",
-    "npm": "^3.10.9"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "start": "node moofbot.js"
-  },
-  "author": "Jim Drey <moof@moofit.com>",
-  "license": "ISC"
+    "name": "MoofBot",
+    "version": "0.0.1",
+    "description": "Discord bot for ButtMumble",
+    "main": "moofbot.js",
+    "dependencies": {
+        "discord.js": "^10.0.1",
+        "npm": "^3.10.9",
+        "request": "^2.7.0"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "start": "node moofbot.js"
+    },
+    "author": "Jim Drey <moof@moofit.com>",
+    "license": "ISC"
 }
