@@ -10,6 +10,7 @@ bot.on('ready', () => {
 
 bot.on('message', msg => {
     if(msg.channel.type === 'dm') return;
+    if (msg.content == null || msg.author.bot || msg.content.charAt(0) != '.') return;
 
     while (msg.content.charAt(0) === '.') { //remove prefix character(s)
         msg.content = msg.content.substr(1);
