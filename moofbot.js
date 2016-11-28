@@ -25,8 +25,16 @@ bot.on('message', msg => {
     if (msg.content == "cat" || msg.content == "kitten" || msg.content == "kitteh") {
         request('http://random.cat/meow', function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                photo = JSON.parse(body).file;
+                var photo = JSON.parse(body).file;
                 msg.channel.sendFile(photo, photo.slice(photo.lastIndexOf('/') + 1), randomCatEmoji());
+            }
+        });
+    }
+    if (msg.content == "dog" || msg.content == "puppy" || msg.content == "doggo" || msg.content == "pupper") {
+        request('http://random.dog/woof', function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                var photo = "http://random.dog/" + body;
+                msg.channel.sendFile(photo, photo.slice(photo.lastIndexOf('/') + 1), randomDogEmoji());
             }
         });
     }
@@ -37,4 +45,9 @@ bot.login(keys.discord);
 function randomCatEmoji() {
     var catEmojis = ["🐱", "🐈", "🐾", "😺", "😸", "😻", "😼", "😽", "🙀", "😾"];
     return catEmojis[Math.floor(Math.random() * catEmojis.length)];
+}
+
+function randomDogEmoji() {
+    var dogEmojis = ["🐶", "🐕", "🐾"];
+    return dogEmojis[Math.floor(Math.random() * dogEmojis.length)];
 }
