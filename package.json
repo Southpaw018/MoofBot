@@ -8,7 +8,9 @@
     "npm": "^3.10.9"
   },
   "devDependencies": {},
-  "scripts": {},
+  "scripts": {
+    "start": "node moofbot.js"
+  },
   "author": "Jim Drey <moof@moofit.com>",
   "license": "ISC"
 }
