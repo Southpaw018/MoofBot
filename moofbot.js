@@ -1,4 +1,7 @@
 var fs = require('fs');
+var http = require('http');
+var request = require('request');
+
 const Discord = require("discord.js");
 const bot = new Discord.Client();
 
@@ -19,6 +22,19 @@ bot.on('message', msg => {
     if (msg.content === "yt") {
         msg.channel.sendMessage("Hello, world!");
     }
+    if (msg.content == "cat" || msg.content == "kitten" || msg.content == "kitteh") {
+        request('http://random.cat/meow', function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                photo = JSON.parse(body).file;
+                msg.channel.sendFile(photo, photo.slice(photo.lastIndexOf('/') + 1), randomCatEmoji());
+            }
+        });
+    }
 });
 
 bot.login(keys.discord);
+
+function randomCatEmoji() {
+    var catEmojis = ["🐱", "🐈", "🐾", "😺", "😸", "😻", "😼", "😽", "🙀", "😾"];
+    return catEmojis[Math.floor(Math.random() * catEmojis.length)];
+}
