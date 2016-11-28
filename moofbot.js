@@ -2,7 +2,7 @@ var fs = require('fs');
 const Discord = require("discord.js");
 const bot = new Discord.Client();
 
-const token = JSON.parse(fs.readFileSync('token.json', 'utf8')).token;
+const keys = JSON.parse(fs.readFileSync('keys.json', 'utf8'));
 
 bot.on('ready', () => {
     console.log(`MoofBot ready. Logged in as ${bot.user.username}#${bot.user.discriminator}`);
@@ -21,4 +21,4 @@ bot.on('message', msg => {
     }
 });
 
-bot.login(token);
+bot.login(keys.discord);
