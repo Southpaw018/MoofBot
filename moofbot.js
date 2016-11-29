@@ -30,7 +30,7 @@ bot.on('message', msg => {
             }
         });
     }
-    if (msg.content == "dog" || msg.content == "puppy" || msg.content == "doggo" || msg.content == "pupper") {
+    if (msg.content == "dog" || msg.content == "doge" || msg.content == "puppy" || msg.content == "doggo" || msg.content == "pupper") {
         request('http://random.dog/woof', function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 var photo = "http://random.dog/" + body;
