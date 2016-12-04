@@ -19,9 +19,6 @@ bot.on('message', msg => {
         msg.content = msg.content.substr(1);
     }
 
-    if (msg.content === "yt") {
-        msg.channel.sendMessage("Hello, world!");
-    }
     if (msg.content == "cat" || msg.content == "kitten" || msg.content == "kitteh") {
         request('http://random.cat/meow', function (error, response, body) {
             if (!error && response.statusCode == 200) {
