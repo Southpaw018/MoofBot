@@ -19,6 +19,11 @@ bot.on('message', msg => {
         msg.content = msg.content.substr(1);
     }
 
+    if (msg.content == "ping") {
+        log("Ping.", msg.author);
+        msg.channel.sendMessage("Pong");
+    }
+
     if (msg.content == "cat" || msg.content == "kitten" || msg.content == "kitteh") {
         log("Cat requested.", msg.author);
         request('http://random.cat/meow', function (error, response, body) {
