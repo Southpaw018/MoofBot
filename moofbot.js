@@ -35,6 +35,27 @@ bot.on('message', msg => {
             }
         });
     }
+
+    if (msg.content.match(/^redditimg /) !== null) {
+        var subreddit = msg.content.split(' ')[1];
+        request({
+            url: "https://api.imgur.com/3/gallery/r/" + subreddit,
+            headers: {
+                "Authorization": "Client-ID " + keys.imgur
+            }
+        }, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                var imgurList = body.replace(/^<pre>|<\/pre>$/g, '');
+                try {
+                    var photos = JSON.parse(imgurList).data;
+                    photo = photos[Math.floor(Math.random() * photos.length)];
+                    msg.channel.sendFile(photo.link, photo.link.slice(photo.link.lastIndexOf('/') + 1), photo.title);
+                } catch (error) {
+                    msg.channel.sendMessage("Sorry, an error occurred while getting photos from that subreddit. Try again later.");
+                }
+            }
+        });
+    }
 });
 
 bot.login(keys.discord);
