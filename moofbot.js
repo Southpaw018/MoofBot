@@ -20,6 +20,7 @@ bot.on('message', msg => {
     }
 
     if (msg.content == "cat" || msg.content == "kitten" || msg.content == "kitteh") {
+        log("Cat requested.", msg.author);
         request('http://random.cat/meow', function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 var photo = JSON.parse(body).file;
@@ -28,6 +29,7 @@ bot.on('message', msg => {
         });
     }
     if (msg.content == "dog" || msg.content == "doge" || msg.content == "puppy" || msg.content == "doggo" || msg.content == "pupper") {
+        log("Dog requested.", msg.author);
         request('http://random.dog/woof', function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 var photo = "http://random.dog/" + body;
@@ -38,6 +40,7 @@ bot.on('message', msg => {
 
     if (msg.content.match(/^redditimg /) !== null) {
         var subreddit = msg.content.split(' ')[1];
+        log("Reddit image requested: " + subreddit, msg.author);
         request({
             url: "https://api.imgur.com/3/gallery/r/" + subreddit,
             headers: {
@@ -68,4 +71,9 @@ function randomCatEmoji() {
 function randomDogEmoji() {
     var dogEmojis = ["🐶", "🐕", "🐾"];
     return dogEmojis[Math.floor(Math.random() * dogEmojis.length)];
+}
+
+function log(message, requestor) {
+    //console.log(message + " [" + requestor.username + "#" + requestor.discriminator + "]");
+    console.log(`${message} [${requestor.username}#${requestor.discriminator}]`);
 }
