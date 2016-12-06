@@ -76,6 +76,5 @@ function randomDogEmoji() {
 }
 
 function log(message, requestor) {
-    //console.log(message + " [" + requestor.username + "#" + requestor.discriminator + "]");
     console.log(`${message} [${requestor.username}#${requestor.discriminator}]`);
 }
