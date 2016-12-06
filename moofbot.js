@@ -1,6 +1,6 @@
 var fs = require('fs');
 var http = require('http');
-var request = require('request');
+var request = require('superagent');
 
 const Discord = require("discord.js");
 const bot = new Discord.Client();
@@ -26,18 +26,18 @@ bot.on('message', msg => {
 
     if (msg.content == "cat" || msg.content == "kitten" || msg.content == "kitteh") {
         log("Cat requested.", msg.author);
-        request('http://random.cat/meow', function (error, response, body) {
+        request.get('http://random.cat/meow').end(function (error, response) {
             if (!error && response.statusCode == 200) {
-                var photo = JSON.parse(body).file;
+                var photo = response.body.file;
                 msg.channel.sendFile(photo, photo.slice(photo.lastIndexOf('/') + 1), randomCatEmoji());
             }
         });
     }
     if (msg.content == "dog" || msg.content == "doge" || msg.content == "puppy" || msg.content == "doggo" || msg.content == "pupper") {
         log("Dog requested.", msg.author);
-        request('http://random.dog/woof', function (error, response, body) {
+        request.get('http://random.dog/woof').end(function (error, response) {
             if (!error && response.statusCode == 200) {
-                var photo = "http://random.dog/" + body;
+                var photo = "http://random.dog/" + response.text;
                 msg.channel.sendFile(photo, photo.slice(photo.lastIndexOf('/') + 1), randomDogEmoji());
             }
         });
@@ -46,16 +46,13 @@ bot.on('message', msg => {
     if (msg.content.match(/^redditimg /) !== null) {
         var subreddit = msg.content.split(' ')[1];
         log("Reddit image requested: " + subreddit, msg.author);
-        request({
-            url: "https://api.imgur.com/3/gallery/r/" + subreddit,
-            headers: {
-                "Authorization": "Client-ID " + keys.imgur
-            }
-        }, function (error, response, body) {
+
+        request.get('https://api.imgur.com/3/gallery/r/' + subreddit)
+        .set('Authorization', 'Client-ID ' + keys.imgur)
+        .end(function (error, response) {
             if (!error && response.statusCode == 200) {
-                var imgurList = body.replace(/^<pre>|<\/pre>$/g, '');
                 try {
-                    var photos = JSON.parse(imgurList).data;
+                    var photos = response.body.data;
                     photo = photos[Math.floor(Math.random() * photos.length)];
                     msg.channel.sendFile(photo.link, photo.link.slice(photo.link.lastIndexOf('/') + 1), photo.title);
                 } catch (error) {
