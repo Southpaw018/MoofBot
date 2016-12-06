@@ -43,7 +43,7 @@ bot.on('message', msg => {
         });
     }
 
-    if (msg.content.match(/^redditimg /) !== null) {
+    if (msg.content.match(/^r(?:eddit)?img /) !== null) {
         var subreddit = msg.content.split(' ')[1];
         log("Reddit image requested: " + subreddit, msg.author);
 
