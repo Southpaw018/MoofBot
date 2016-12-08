@@ -1,6 +1,5 @@
-var fs = require('fs');
-var http = require('http');
-var request = require('superagent');
+const fs = require('fs');
+const request = require('superagent');
 
 const Discord = require("discord.js");
 const bot = new Discord.Client();
@@ -27,7 +26,7 @@ bot.on('message', msg => {
     if (msg.content == "cat" || msg.content == "kitten" || msg.content == "kitteh") {
         log("Cat requested.", msg.author);
         request.get('http://random.cat/meow').end(function (error, response) {
-            if (!error && response.statusCode == 200) {
+            if (!error && response.ok) {
                 var photo = response.body.file;
                 msg.channel.sendFile(photo, photo.slice(photo.lastIndexOf('/') + 1), randomCatEmoji());
             }
@@ -36,7 +35,7 @@ bot.on('message', msg => {
     if (msg.content == "dog" || msg.content == "doge" || msg.content == "puppy" || msg.content == "doggo" || msg.content == "pupper") {
         log("Dog requested.", msg.author);
         request.get('http://random.dog/woof').end(function (error, response) {
-            if (!error && response.statusCode == 200) {
+            if (!error && response.ok) {
                 var photo = "http://random.dog/" + response.text;
                 msg.channel.sendFile(photo, photo.slice(photo.lastIndexOf('/') + 1), randomDogEmoji());
             }
@@ -47,13 +46,18 @@ bot.on('message', msg => {
         var subreddit = msg.content.split(' ')[1];
         log("Reddit image requested: " + subreddit, msg.author);
 
+        if (keys.bannedSubreddits.indexOf(subreddit) > -1) {
+            msg.channel.sendMessage("Sorry, I can't get images from that subreddit.");
+            return;
+        }
+
         request.get('https://api.imgur.com/3/gallery/r/' + subreddit)
         .set('Authorization', 'Client-ID ' + keys.imgur)
         .end(function (error, response) {
-            if (!error && response.statusCode == 200) {
+            if (!error && response.ok) {
                 try {
                     var photos = response.body.data;
-                    photo = photos[Math.floor(Math.random() * photos.length)];
+                    photo = randomArrayItem(photos);
                     msg.channel.sendFile(photo.link, photo.link.slice(photo.link.lastIndexOf('/') + 1), photo.title);
                 } catch (error) {
                     msg.channel.sendMessage("Sorry, an error occurred while getting photos from that subreddit. Try again later.");
@@ -66,15 +70,17 @@ bot.on('message', msg => {
 bot.login(keys.discord);
 
 function randomCatEmoji() {
-    var catEmojis = ["🐱", "🐈", "🐾", "😺", "😸", "😻", "😼", "😽", "🙀", "😾"];
-    return catEmojis[Math.floor(Math.random() * catEmojis.length)];
+    return randomArrayItem(["🐱", "🐈", "🐾", "😺", "😸", "😻", "😼", "😽", "🙀", "😾"]);
 }
 
 function randomDogEmoji() {
-    var dogEmojis = ["🐶", "🐕", "🐾"];
-    return dogEmojis[Math.floor(Math.random() * dogEmojis.length)];
+    return randomArrayItem(["🐶", "🐕", "🐾"]);
 }
 
 function log(message, requestor) {
     console.log(`${message} [${requestor.username}#${requestor.discriminator}]`);
+}
+
+function randomArrayItem(arrayPicker) {
+    return arrayPicker[Math.floor(Math.random() * arrayPicker.length)];
 }
