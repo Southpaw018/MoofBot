@@ -58,6 +58,15 @@ bot.on('message', msg => {
                 try {
                     var photos = response.body.data;
                     photo = randomArrayItem(photos);
+                    if (photo.is_album) {
+                        request.get(`https://api.imgur.com/3/album/${photo.id}`)
+                        .set('Authorization', 'Client-ID ' + keys.imgur)
+                        .end(function (error, response) {
+                            photo = randomArrayItem(response.body.data.images);
+                            msg.channel.sendFile(photo.link, photo.link.slice(photo.link.lastIndexOf('/') + 1), photo.title);
+                        });
+                        return;
+                    }
                     msg.channel.sendFile(photo.link, photo.link.slice(photo.link.lastIndexOf('/') + 1), photo.title);
                 } catch (error) {
                     msg.channel.sendMessage("Sorry, an error occurred while getting photos from that subreddit. Try again later.");
