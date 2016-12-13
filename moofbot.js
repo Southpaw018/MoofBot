@@ -6,8 +6,12 @@ const bot = new Discord.Client();
 
 const keys = JSON.parse(fs.readFileSync('keys.json', 'utf8'));
 
+var botChannel;
 bot.on('ready', () => {
     console.log(`MoofBot ready. Logged in as ${bot.user.username}#${bot.user.discriminator}`);
+    if ((typeof keys.botChannel) !== null) { //botChannel set
+         botChannel = bot.channels.get(keys.botChannel);
+    }
 });
 
 bot.on('message', msg => {
@@ -73,6 +77,27 @@ bot.on('message', msg => {
                 }
             }
         });
+    }
+});
+
+bot.on('voiceStateUpdate', (oldGuildMember, newGuildMember) => {
+    var isJoining = false;
+    var isLeaving = false;
+    if (typeof(oldGuildMember.voiceChannel) == 'undefined') {isJoining = true;}
+    if (typeof(newGuildMember.voiceChannel) == 'undefined') {isLeaving = true;}
+
+    if (isJoining && isLeaving) {return;} //wat
+    if (!isJoining && !isLeaving) { //moving
+        botChannel.sendMessage(`<@${oldGuildMember.id}> moved from <#${oldGuildMember.voiceChannel.id}> to <#${newGuildMember.voiceChannel.id}>`);
+        return;
+    }
+    if (isJoining) {
+        botChannel.sendMessage(`<@${newGuildMember.id}> joined <#${newGuildMember.voiceChannel.id}>`);
+        return;
+    }
+    if (isLeaving) {
+        botChannel.sendMessage(`<@${oldGuildMember.id}> left <#${oldGuildMember.voiceChannel.id}>`);
+        return;
     }
 });
 
