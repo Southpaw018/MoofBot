@@ -78,6 +78,20 @@ bot.on('message', msg => {
             }
         });
     }
+
+    if (msg.content.startsWith('dice')) {
+        var dice = msg.content.slice(msg.content.indexOf(' '));
+        log(`Dice roll requested: ${dice}`, msg.author);
+        request.get('https://rolz.org/api/?' + encodeURIComponent(dice) + '.json')
+        .end(function(error, response) {
+            if (!error && response.ok) {
+                var roll = response.body;
+                msg.channel.sendMessage(`${roll.input}: ${roll.result} ${roll.details}`);
+            } else {
+                msg.channel.sendMessage("Sorry, there was an error computing your dice roll.");
+            }
+        });
+    }
 });
 
 bot.on('voiceStateUpdate', (oldGuildMember, newGuildMember) => {
