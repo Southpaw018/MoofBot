@@ -83,11 +83,17 @@ bot.on('message', msg => {
 bot.on('voiceStateUpdate', (oldGuildMember, newGuildMember) => {
     var isJoining = false;
     var isLeaving = false;
-    if (typeof(oldGuildMember.voiceChannel) == 'undefined') {isJoining = true;}
-    if (typeof(newGuildMember.voiceChannel) == 'undefined') {isLeaving = true;}
+    if (typeof(oldGuildMember.voiceChannel) === 'undefined') {isJoining = true;}
+    if (typeof(newGuildMember.voiceChannel) === 'undefined') {isLeaving = true;}
 
     if (isJoining && isLeaving) {return;} //wat
+    if ((typeof oldGuildMember.user !== 'undefined' && oldGuildMember.user.bot) ||
+        (typeof newGuildMember.user !== 'undefined' && newGuildMember.user.bot)) {
+            return; //don't alert for bots
+        }
+
     if (!isJoining && !isLeaving) { //moving
+        if (oldGuildMember.voiceChannel.id == newGuildMember.voiceChannel.id) {return;} //muting or something
         botChannel.sendMessage(`<@${oldGuildMember.id}> moved from <#${oldGuildMember.voiceChannel.id}> to <#${newGuildMember.voiceChannel.id}>`);
         return;
     }
