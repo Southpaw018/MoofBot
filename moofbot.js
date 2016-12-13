@@ -57,7 +57,7 @@ bot.on('message', msg => {
 
         request.get('https://api.imgur.com/3/gallery/r/' + subreddit)
         .set('Authorization', 'Client-ID ' + keys.imgur)
-        .end(function (error, response) {
+        .end(function (error, response) { //TODO: make this smart
             if (!error && response.ok) {
                 try {
                     var photos = response.body.data;
@@ -67,8 +67,13 @@ bot.on('message', msg => {
                         .set('Authorization', 'Client-ID ' + keys.imgur)
                         .end(function (error, response) {
                             photo = randomArrayItem(response.body.data.images);
+                            //TODO: if photo.title == "null" omit
                             msg.channel.sendFile(photo.link, photo.link.slice(photo.link.lastIndexOf('/') + 1), photo.title);
                         });
+                        return;
+                    }
+                    if (photo.animated || photo.size >= 8388608) { //8MiB
+                        msg.channel.sendMessage(photo.title + '\n' + photo.link);
                         return;
                     }
                     msg.channel.sendFile(photo.link, photo.link.slice(photo.link.lastIndexOf('/') + 1), photo.title);
