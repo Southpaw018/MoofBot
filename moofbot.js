@@ -1,5 +1,6 @@
 const fs = require('fs');
 const request = require('superagent');
+const moment = require("moment");
 
 const Discord = require("discord.js");
 const bot = new Discord.Client();
@@ -109,19 +110,20 @@ bot.on('voiceStateUpdate', (oldGuildMember, newGuildMember) => {
     if ((typeof oldGuildMember.user !== 'undefined' && oldGuildMember.user.bot) ||
         (typeof newGuildMember.user !== 'undefined' && newGuildMember.user.bot)) {
             return; //don't alert for bots
-        }
+    }
 
+    var now = moment().format('h:mm');
     if (!isJoining && !isLeaving) { //moving
         if (oldGuildMember.voiceChannel.id == newGuildMember.voiceChannel.id) {return;} //muting or something
-        botChannel.sendMessage(`<@${oldGuildMember.id}> moved from <#${oldGuildMember.voiceChannel.id}> to <#${newGuildMember.voiceChannel.id}>`);
+        botChannel.sendMessage(`[${now}] <@${oldGuildMember.id}> moved from <#${oldGuildMember.voiceChannel.id}> to <#${newGuildMember.voiceChannel.id}>`);
         return;
     }
     if (isJoining) {
-        botChannel.sendMessage(`<@${newGuildMember.id}> joined <#${newGuildMember.voiceChannel.id}>`);
+        botChannel.sendMessage(`[${now}] <@${newGuildMember.id}> joined <#${newGuildMember.voiceChannel.id}>`);
         return;
     }
     if (isLeaving) {
-        botChannel.sendMessage(`<@${oldGuildMember.id}> left <#${oldGuildMember.voiceChannel.id}>`);
+        botChannel.sendMessage(`[${now}] <@${oldGuildMember.id}> left <#${oldGuildMember.voiceChannel.id}>`);
         return;
     }
 });
