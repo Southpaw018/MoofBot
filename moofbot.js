@@ -28,7 +28,7 @@ bot.on('message', msg => {
         msg.channel.sendMessage("Pong");
     }
 
-    if (msg.content == "cat" || msg.content == "kitten" || msg.content == "kitteh") {
+    if (msg.content == "cat" || msg.content.match(/kitte(?:n|h)/) !== null) {
         log("Cat requested.", msg.author);
         request.get('http://random.cat/meow').end(function (error, response) {
             if (!error && response.ok) {
@@ -37,7 +37,7 @@ bot.on('message', msg => {
             }
         });
     }
-    if (msg.content == "dog" || msg.content == "doge" || msg.content == "puppy" || msg.content == "doggo" || msg.content == "pupper") {
+    if (msg.content.match(/^dog(?:go|e|gy)?/) !== null || msg.content.match(/^pupp(?:y|er)/) !== null) {
         log("Dog requested.", msg.author);
         request.get('http://random.dog/woof').end(function (error, response) {
             if (!error && response.ok) {
