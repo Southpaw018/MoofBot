@@ -116,14 +116,17 @@ bot.on('voiceStateUpdate', (oldGuildMember, newGuildMember) => {
     if (!isJoining && !isLeaving) { //moving
         if (oldGuildMember.voiceChannel.id == newGuildMember.voiceChannel.id) {return;} //muting or something
         botChannel.sendMessage(`[${now}] <@${oldGuildMember.id}> moved from <#${oldGuildMember.voiceChannel.id}> to <#${newGuildMember.voiceChannel.id}>`);
+        log(`[${now}] Voice channel move`, oldGuildMember.user);
         return;
     }
     if (isJoining) {
         botChannel.sendMessage(`[${now}] <@${newGuildMember.id}> joined <#${newGuildMember.voiceChannel.id}>`);
+        log(`[${now}] Voice channel connect`, newGuildMember.user);
         return;
     }
     if (isLeaving) {
         botChannel.sendMessage(`[${now}] <@${oldGuildMember.id}> left <#${oldGuildMember.voiceChannel.id}>`);
+        log(`[${now}] Voice channel disconnect`, oldGuildMember.user);
         return;
     }
 });
