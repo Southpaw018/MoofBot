@@ -9,7 +9,7 @@ const keys = JSON.parse(fs.readFileSync('keys.json', 'utf8'));
 
 var botChannel;
 bot.on('ready', () => {
-    console.log(`MoofBot ready. Logged in as ${bot.user.username}#${bot.user.discriminator}`);
+    log(`MoofBot ready.`, bot.user);
     if ((typeof keys.botChannel) !== null) { //botChannel set
          botChannel = bot.channels.get(keys.botChannel);
     }
@@ -145,21 +145,20 @@ bot.on('voiceStateUpdate', (oldGuildMember, newGuildMember) => {
             return; //don't alert for bots
     }
 
-    var now = moment().format('h:mm');
     if (!isJoining && !isLeaving) { //moving
         if (oldGuildMember.voiceChannel.id == newGuildMember.voiceChannel.id) {return;} //muting or something
         botChannel.sendMessage(`[${now}] <@${oldGuildMember.id}> moved from <#${oldGuildMember.voiceChannel.id}> to <#${newGuildMember.voiceChannel.id}>`);
-        log(`[${now}] Voice channel move`, oldGuildMember.user);
+        log(`Voice channel move`, oldGuildMember.user);
         return;
     }
     if (isJoining) {
         botChannel.sendMessage(`[${now}] <@${newGuildMember.id}> joined <#${newGuildMember.voiceChannel.id}>`);
-        log(`[${now}] Voice channel connect`, newGuildMember.user);
+        log(`Voice channel connect`, newGuildMember.user);
         return;
     }
     if (isLeaving) {
         botChannel.sendMessage(`[${now}] <@${oldGuildMember.id}> left <#${oldGuildMember.voiceChannel.id}>`);
-        log(`[${now}] Voice channel disconnect`, oldGuildMember.user);
+        log(`Voice channel disconnect`, oldGuildMember.user);
         return;
     }
 });
@@ -175,7 +174,12 @@ function randomDogEmoji() {
 }
 
 function log(message, requestor) {
-    console.log(`${message} [${requestor.username}#${requestor.discriminator}]`);
+    var now = moment().format('h:mm');
+    if (typeof requestor !== 'object') {
+        console.log(`[${now}] ${message} [null]`);
+        return;
+    }
+    console.log(`[${now}] ${message} [${requestor.username}#${requestor.discriminator}]`);
 }
 
 function randomArrayItem(arrayPicker) {
