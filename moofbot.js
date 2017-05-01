@@ -98,6 +98,39 @@ bot.on('message', msg => {
             }
         });
     }
+
+    if (msg.content.startsWith('8ball')) {
+        var question = msg.content.slice(msg.content.indexOf(' ') + 1);
+        if (question.lastIndexOf('?') != question.length - 1) {
+            msg.channel.sendMessage("That is not a question.");
+            return;
+        }
+        log(`Magic 8 Ball: ${question}`, msg.author);
+        request.get('https://8ball.delegator.com/magic/JSON/' + encodeURIComponent(question))
+        .end(function(error, response) {
+            if (!error && response.ok) {
+                var reply = response.body.magic;
+                var disposition;
+                switch (reply.type) {
+                    case "Affirmative":
+                        disposition = "😃";
+                        break;
+                    case "Contrary":
+                        disposition = "🙁";
+                        break;
+                    default: //"Neutral"
+                        disposition = "😐";
+                        break;
+                }
+                var tmp = msg.channel.sendMessage(`The Magic 8-Ball says: ${reply.answer}`)
+                .then(message => {
+                    message.react(disposition);
+                });
+            } else {
+                msg.channel.sendMessage("The Magic 8-Ball's window is cloudy.");
+            }
+        });
+    }
 });
 
 bot.on('voiceStateUpdate', (oldGuildMember, newGuildMember) => {
