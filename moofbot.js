@@ -85,8 +85,8 @@ bot.on('message', msg => {
         });
     }
 
-    if (msg.content.startsWith('dice')) {
-        var dice = msg.content.slice(msg.content.indexOf(' '));
+    if (msg.content.startsWith('dice')) { //https://rolz.org/help/api
+        var dice = msg.content.slice(msg.content.indexOf(' ') + 1);
         log(`Dice roll requested: ${dice}`, msg.author);
         request.get('https://rolz.org/api/?' + encodeURIComponent(dice) + '.json')
         .end(function(error, response) {
@@ -99,7 +99,7 @@ bot.on('message', msg => {
         });
     }
 
-    if (msg.content.startsWith('8ball')) {
+    if (msg.content.startsWith('8ball')) { //https://8ball.delegator.com/
         var question = msg.content.slice(msg.content.indexOf(' ') + 1);
         if (question.lastIndexOf('?') != question.length - 1) {
             msg.channel.sendMessage("That is not a question.");
@@ -145,6 +145,7 @@ bot.on('voiceStateUpdate', (oldGuildMember, newGuildMember) => {
             return; //don't alert for bots
     }
 
+    var now = moment().format('h:mm:ss');
     if (!isJoining && !isLeaving) { //moving
         if (oldGuildMember.voiceChannel.id == newGuildMember.voiceChannel.id) {return;} //muting or something
         botChannel.sendMessage(`[${now}] <@${oldGuildMember.id}> moved from <#${oldGuildMember.voiceChannel.id}> to <#${newGuildMember.voiceChannel.id}>`);
