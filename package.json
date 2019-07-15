@@ -4,9 +4,9 @@
     "description": "Discord bot for ButtMumble",
     "main": "moofbot.js",
     "dependencies": {
-        "discord.js": "^11.0.0",
-        "moment": "^2.18.1",
-        "npm": "^4.5.0"
+        "discord.js": "^11.3.2",
+        "moment": "^2.22.2",
+        "npm": "^6.1.0"
     },
     "devDependencies": {},
     "scripts": {
