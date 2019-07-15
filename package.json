@@ -1,19 +1,13 @@
 {
-    "name": "MoofBot",
-    "version": "0.0.1",
+    "name": "moofbot",
+    "version": "0.0.2",
     "description": "Discord bot for ButtMumble",
     "main": "moofbot.js",
     "dependencies": {
-        "discord.js": "^11.3.2",
-        "moment": "^2.22.2",
-        "npm": "^6.1.0"
-    },
-    "optionalDependencies": {
-        "node-opus": "^0.3.0",
-        "bufferutil": "^3.0.3",
-        "erlpack": "discordapp/erlpack",
-        "sodium": "^0.7.3",
-        "uws": "^9.14.0"
+        "discord.js": "^11.5.1",
+        "moment": "^2.24.0",
+        "npm": "^6.1.0",
+        "superagent": "^5.1.0"
     },
     "devDependencies": {},
     "scripts": {

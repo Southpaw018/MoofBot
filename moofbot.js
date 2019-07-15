@@ -164,6 +164,19 @@ bot.on('voiceStateUpdate', (oldGuildMember, newGuildMember) => {
     }
 });
 
+bot.on('disconnect', (CloseEvent) => {
+    log(`Bot disconnected.`, bot);
+    bot.login(keys.discord);
+});
+bot.on('error', (ErrorEvent) => {
+    log(`Bot connection error.`, bot);
+    bot.login(keys.discord);
+});
+bot.on('reconnecting', () => {
+    log(`Bot reconnecting....`, bot);
+});
+//bot.on('resume', (replayed) => {});
+
 bot.login(keys.discord);
 
 function randomCatEmoji() {
