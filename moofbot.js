@@ -30,19 +30,23 @@ bot.on('message', msg => {
 
     if (msg.content == "cat" || msg.content.match(/kitte(?:n|h)/) !== null) {
         log("Cat requested.", msg.author);
-        request.get('http://random.cat/meow').end(function (error, response) {
+        request.get('http://aws.random.cat/meow').end(function (error, response) {
             if (!error && response.ok) {
                 var photo = response.body.file;
-                msg.channel.sendFile(photo, photo.slice(photo.lastIndexOf('/') + 1), randomCatEmoji());
+                msg.channel.send(randomCatEmoji(), {
+                    files: [photo]
+                });
             }
         });
     }
     if (msg.content.match(/^dog(?:go|e|gy)?/) !== null || msg.content.match(/^pupp(?:y|er)/) !== null) {
         log("Dog requested.", msg.author);
-        request.get('http://random.dog/woof').end(function (error, response) {
+        request.get('https://random.dog/woof.json').end(function (error, response) {
             if (!error && response.ok) {
-                var photo = "http://random.dog/" + response.text;
-                msg.channel.sendFile(photo, photo.slice(photo.lastIndexOf('/') + 1), randomDogEmoji());
+                var photo = response.body.url;
+                msg.channel.send(randomDogEmoji(), {
+                    files: [photo]
+                });
             }
         });
     }
@@ -69,15 +73,19 @@ bot.on('message', msg => {
                         .end(function (error, response) {
                             photo = randomArrayItem(response.body.data.images);
                             //TODO: if photo.title == "null" omit
-                            msg.channel.sendFile(photo.link, photo.link.slice(photo.link.lastIndexOf('/') + 1), photo.title);
+                            msg.channel.send(photo.title, {
+                                files: [photo.link]
+                            });
                         });
                         return;
                     }
                     if (photo.animated || photo.size >= 8388608) { //8MiB
-                        msg.channel.send(photo.title + '\n' + photo.link);
+                        msg.channel.send(photo.title + '\n' + photo.link); //TODO improve with newer embed stuff
                         return;
                     }
-                    msg.channel.sendFile(photo.link, photo.link.slice(photo.link.lastIndexOf('/') + 1), photo.title);
+                    msg.channel.send(photo.title, {
+                        files: [photo.link]
+                    });
                 } catch (error) {
                     msg.channel.send("Sorry, an error occurred while getting photos from that subreddit. Try again later.");
                 }
