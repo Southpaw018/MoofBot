@@ -141,6 +141,14 @@ bot.on('message', msg => {
     }
 });
 
+bot.on('message', msg =>  {
+    var storeLinkTest = msg.content.match(/https:\/\/store\.steampowered\.com\/app\/(\d+)\/.*/);
+    if (storeLinkTest !== null)  {
+        log("Rewriting Steam store link: " + storeLinkTest[1], msg.author);
+        msg.channel.send("Steam client link: steam://advertise/" + storeLinkTest[1]);
+    }
+});
+
 /*bot.on('voiceStateUpdate', (oldGuildMember, newGuildMember) => {
     var isJoining = false;
     var isLeaving = false;
