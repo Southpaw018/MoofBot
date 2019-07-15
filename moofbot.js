@@ -25,7 +25,7 @@ bot.on('message', msg => {
 
     if (msg.content == "ping") {
         log("Ping.", msg.author);
-        msg.channel.sendMessage("Pong");
+        msg.channel.send("Pong");
     }
 
     if (msg.content == "cat" || msg.content.match(/kitte(?:n|h)/) !== null) {
@@ -52,7 +52,7 @@ bot.on('message', msg => {
         log("Reddit image requested: " + subreddit, msg.author);
 
         if (keys.bannedSubreddits.indexOf(subreddit) > -1) {
-            msg.channel.sendMessage("Sorry, I can't get images from that subreddit.");
+            msg.channel.send("Sorry, I can't get images from that subreddit.");
             return;
         }
 
@@ -74,27 +74,27 @@ bot.on('message', msg => {
                         return;
                     }
                     if (photo.animated || photo.size >= 8388608) { //8MiB
-                        msg.channel.sendMessage(photo.title + '\n' + photo.link);
+                        msg.channel.send(photo.title + '\n' + photo.link);
                         return;
                     }
                     msg.channel.sendFile(photo.link, photo.link.slice(photo.link.lastIndexOf('/') + 1), photo.title);
                 } catch (error) {
-                    msg.channel.sendMessage("Sorry, an error occurred while getting photos from that subreddit. Try again later.");
+                    msg.channel.send("Sorry, an error occurred while getting photos from that subreddit. Try again later.");
                 }
             }
         });
     }
 
-    if (msg.content.startsWith('dice')) { //https://rolz.org/help/api
+    if (msg.content.startsWith('dice') || msg.content.startsWith('roll')) { //https://rolz.org/help/api
         var dice = msg.content.slice(msg.content.indexOf(' ') + 1);
         log(`Dice roll requested: ${dice}`, msg.author);
         request.get('https://rolz.org/api/?' + encodeURIComponent(dice) + '.json')
         .end(function(error, response) {
             if (!error && response.ok) {
                 var roll = response.body;
-                msg.channel.sendMessage(`${roll.input}: ${roll.result} ${roll.details}`);
+                msg.channel.send(`${roll.input}: ${roll.result} ${roll.details}`);
             } else {
-                msg.channel.sendMessage("Sorry, there was an error computing your dice roll.");
+                msg.channel.send("Sorry, there was an error computing your dice roll.");
             }
         });
     }
@@ -102,7 +102,7 @@ bot.on('message', msg => {
     if (msg.content.startsWith('8ball')) { //https://8ball.delegator.com/
         var question = msg.content.slice(msg.content.indexOf(' ') + 1);
         if (question.lastIndexOf('?') != question.length - 1) {
-            msg.channel.sendMessage("That is not a question.");
+            msg.channel.send("That is not a question.");
             return;
         }
         log(`Magic 8 Ball: ${question}`, msg.author);
@@ -122,12 +122,12 @@ bot.on('message', msg => {
                         disposition = "😐";
                         break;
                 }
-                var tmp = msg.channel.sendMessage(`The Magic 8-Ball says: ${reply.answer}`)
+                var tmp = msg.channel.send(`The Magic 8-Ball says: ${reply.answer}`)
                 .then(message => {
                     message.react(disposition);
                 });
             } else {
-                msg.channel.sendMessage("The Magic 8-Ball's window is cloudy.");
+                msg.channel.send("The Magic 8-Ball's window is cloudy.");
             }
         });
     }
@@ -148,17 +148,17 @@ bot.on('voiceStateUpdate', (oldGuildMember, newGuildMember) => {
     var now = moment().format('h:mm:ss');
     if (!isJoining && !isLeaving) { //moving
         if (oldGuildMember.voiceChannel.id == newGuildMember.voiceChannel.id) {return;} //muting or something
-        botChannel.sendMessage(`[${now}] <@${oldGuildMember.id}> moved from <#${oldGuildMember.voiceChannel.id}> to <#${newGuildMember.voiceChannel.id}>`);
+        botChannel.send(`[${now}] <@${oldGuildMember.id}> moved from <#${oldGuildMember.voiceChannel.id}> to <#${newGuildMember.voiceChannel.id}>`);
         log(`Voice channel move`, oldGuildMember.user);
         return;
     }
     if (isJoining) {
-        botChannel.sendMessage(`[${now}] <@${newGuildMember.id}> joined <#${newGuildMember.voiceChannel.id}>`);
+        botChannel.send(`[${now}] <@${newGuildMember.id}> joined <#${newGuildMember.voiceChannel.id}>`);
         log(`Voice channel connect`, newGuildMember.user);
         return;
     }
     if (isLeaving) {
-        botChannel.sendMessage(`[${now}] <@${oldGuildMember.id}> left <#${oldGuildMember.voiceChannel.id}>`);
+        botChannel.send(`[${now}] <@${oldGuildMember.id}> left <#${oldGuildMember.voiceChannel.id}>`);
         log(`Voice channel disconnect`, oldGuildMember.user);
         return;
     }
