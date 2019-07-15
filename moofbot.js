@@ -141,7 +141,7 @@ bot.on('message', msg => {
     }
 });
 
-bot.on('voiceStateUpdate', (oldGuildMember, newGuildMember) => {
+/*bot.on('voiceStateUpdate', (oldGuildMember, newGuildMember) => {
     var isJoining = false;
     var isLeaving = false;
     if (typeof(oldGuildMember.voiceChannel) === 'undefined') {isJoining = true;}
@@ -170,7 +170,7 @@ bot.on('voiceStateUpdate', (oldGuildMember, newGuildMember) => {
         log(`Voice channel disconnect`, oldGuildMember.user);
         return;
     }
-});
+});*/
 
 bot.on('disconnect', (CloseEvent) => {
     log(`Bot disconnected.`, bot);
