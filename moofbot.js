@@ -96,7 +96,7 @@ bot.on('message', msg => {
     if (msg.content.startsWith('dice') || msg.content.startsWith('roll')) { //https://rolz.org/help/api
         var dice = msg.content.slice(msg.content.indexOf(' ') + 1);
         log(`Dice roll requested: ${dice}`, msg.author);
-        request.get('https://rolz.org/api/?' + encodeURIComponent(dice) + '.json')
+        request.get('https://rolz.org/api/?' + dice + '.json')
         .end(function(error, response) {
             if (!error && response.ok) {
                 var roll = response.body;
