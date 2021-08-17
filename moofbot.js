@@ -2,8 +2,14 @@ const fs = require('fs');
 const request = require('superagent');
 const moment = require("moment");
 
-const Discord = require("discord.js");
-const bot = new Discord.Client();
+const {Client, Intents} = require('discord.js');
+const bot = new Client({
+	intents: [
+		Intents.FLAGS.GUILDS,
+		Intents.FLAGS.GUILD_MESSAGES,
+		Intents.FLAGS.DIRECT_MESSAGES
+	]
+});
 
 const keys = JSON.parse(fs.readFileSync('keys.json', 'utf8'));
 
@@ -15,7 +21,7 @@ bot.on('ready', () => {
     }*/
 });
 
-bot.on('message', msg => {
+bot.on('messageCreate', msg => {
     if(msg.channel.type === 'dm') return;
     if (msg.content == null || msg.author.bot || msg.content.charAt(0) != '.') return;
 
@@ -146,7 +152,7 @@ bot.on('message', msg => {
     }
 });
 
-bot.on('message', msg =>  {
+bot.on('messageCreate', msg =>  {
 	if (msg.author.bot) return;
     var storeLinkTest = msg.content.match(/https:\/\/store\.steampowered\.com\/app\/(\d+)\/.*/);
     if (storeLinkTest !== null)  {
@@ -192,18 +198,24 @@ bot.on('message', msg =>  {
     }
 });*/
 
-bot.on('disconnect', (CloseEvent) => {
+//Connection logging
+bot.on('shardDisconnect', (CloseEvent) => {
     log(`Bot disconnected.`, bot);
     bot.login(keys.discord);
 });
-bot.on('error', (ErrorEvent) => {
+bot.on('shardError', (ErrorEvent) => {
     log(`Bot connection error.`, bot);
-    bot.login(keys.discord);
+    //bot.login(keys.discord);
 });
-bot.on('reconnecting', () => {
+bot.on('shardReconnecting', () => {
     log(`Bot reconnecting....`, bot);
 });
-//bot.on('resume', (replayed) => {});
+bot.on('shardResume', () => {
+    log(`Bot connection restored.`, bot);
+});
+bot.on('shardReady', () => {
+    log(`Bot connection ready.`, bot);
+});
 
 bot.login(keys.discord);
 
