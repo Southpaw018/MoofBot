@@ -10,9 +10,9 @@ const keys = JSON.parse(fs.readFileSync('keys.json', 'utf8'));
 var botChannel;
 bot.on('ready', () => {
     log(`MoofBot ready.`, bot.user);
-    if ((typeof keys.botChannel) !== null) { //botChannel set
+    /*if ((typeof keys.botChannel) !== null) { //botChannel set
          botChannel = bot.channels.get(keys.botChannel);
-    }
+    }*/
 });
 
 bot.on('message', msg => {
@@ -28,7 +28,7 @@ bot.on('message', msg => {
         msg.channel.send("Pong");
     }
 
-    if (msg.content == "cat" || msg.content.match(/kitte(?:n|h)/) !== null) {
+    /*if (msg.content == "cat" || msg.content.match(/kitte(?:n|h)/) !== null) {
         log("Cat requested.", msg.author);
         request.get('http://aws.random.cat/meow').end(function (error, response) {
             if (!error && response.ok) {
@@ -91,7 +91,7 @@ bot.on('message', msg => {
                 }
             }
         });
-    }
+    }*/
 
     if (msg.content.startsWith('dice') || msg.content.startsWith('roll')) { //https://rolz.org/help/api
         var dice = msg.content.slice(msg.content.indexOf(' ') + 1).replace(/\s/g, '');
