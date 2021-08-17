@@ -94,13 +94,18 @@ bot.on('message', msg => {
     }
 
     if (msg.content.startsWith('dice') || msg.content.startsWith('roll')) { //https://rolz.org/help/api
-        var dice = msg.content.slice(msg.content.indexOf(' ') + 1);
+        var dice = msg.content.slice(msg.content.indexOf(' ') + 1).replace(/\s/g, '');
         log(`Dice roll requested: ${dice}`, msg.author);
         request.get('https://rolz.org/api/?' + dice + '.json')
         .end(function(error, response) {
             if (!error && response.ok) {
                 var roll = response.body;
-                msg.channel.send(`${roll.input}: ${roll.result} ${roll.details}`);
+				if (roll.details.length > 100) {
+					msg.channel.send(`${roll.input}: ${roll.result} (Details over 100 characters. Skipping.)`);
+				}
+				else {
+					msg.channel.send(`${roll.input}: ${roll.result} ${roll.details}`);
+				}
             } else {
                 msg.channel.send("Sorry, there was an error computing your dice roll.");
             }
@@ -142,11 +147,18 @@ bot.on('message', msg => {
 });
 
 bot.on('message', msg =>  {
+	if (msg.author.bot) return;
     var storeLinkTest = msg.content.match(/https:\/\/store\.steampowered\.com\/app\/(\d+)\/.*/);
     if (storeLinkTest !== null)  {
-        log("Rewriting Steam store link: " + storeLinkTest[1], msg.author);
+        log("Rewriting Steam store link: app " + storeLinkTest[1], msg.author);
         msg.channel.send("Steam client link: steam://advertise/" + storeLinkTest[1]);
     }
+    var storeLinkTest = msg.content.match(/https:\/\/store\.steampowered\.com\/bundle\/(\d+)\/.*/);
+    if (storeLinkTest !== null)  {
+        log("Rewriting Steam store link: bundle " + storeLinkTest[1], msg.author);
+        msg.channel.send("Steam client link: steam://openurl/"+ storeLinkTest[0]);
+    }
+
 });
 
 /*bot.on('voiceStateUpdate', (oldGuildMember, newGuildMember) => {
@@ -209,7 +221,12 @@ function log(message, requestor) {
         console.log(`[${now}] ${message} [null]`);
         return;
     }
-    console.log(`[${now}] ${message} [${requestor.username}#${requestor.discriminator}]`);
+    if (typeof message.channel !== 'object') {
+        console.log(`[${now}] ${message} [${requestor.username}#${requestor.discriminator}]`);
+        return;
+    }
+
+    console.log(`[${now}] ${message.guild.name}${message.channel.name}: ${message} [${requestor.username}#${requestor.discriminator}]`);
 }
 
 function randomArrayItem(arrayPicker) {
